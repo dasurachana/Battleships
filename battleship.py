@@ -95,7 +95,7 @@ def checkShip(grid, ship):
     for each in ship:
         x=each[0]
         y=each[1]
-        if grid[x][y] != 1:
+        if grid[x][y] != EMPTY_UNCLICKED:
             return False
     return True
 
