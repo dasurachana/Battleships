@@ -174,9 +174,9 @@ Parameters: dict mapping strs to values ; mouse event object
 Returns: list of ints
 '''
 def getClickedCell(data, event):
-    return
-
-
+    coord_x=int(event.x/data["cell_Size"])
+    coord_y=int(event.y/data["cell_Size"])
+    return [coord_y,coord_x]
 '''
 drawShip(data, canvas, ship)
 Parameters: dict mapping strs to values ; Tkinter canvas; 2D list of ints
@@ -315,7 +315,6 @@ def runSimulation(w, h):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    test.testIsVertical()
-    test.testIsHorizontal()
+    test.testGetClickedCell()
     ## Finally, run the simulation to test it manually ##
     runSimulation(500, 500)
