@@ -31,11 +31,12 @@ def makeModel(data):
     data["board_Size"] = 500
     data["cell_Size"] = data["board_Size"]/data["rows"]
     data["numShips"] = 5
-    data["user_Ship_Num"]=5
+    data["user_Ship_Num"]=0
     data["comp_Ship_Num"]=5
     data["user_Board"]=emptyGrid(data["rows"],data["cols"])
     data["comp_Board"]=addShips(emptyGrid(data["rows"],data["cols"]),data["numShips"])
     data["temp_Ship"]=[]
+    #data["user_Ships"]=0
     
     return data
 
@@ -66,7 +67,10 @@ Parameters: dict mapping strs to values ; mouse event object ; 2D list of ints
 Returns: None
 '''
 def mousePressed(data, event, board):
-    pass
+    click= getClickedCell(data,event)
+    if board=="user":
+        clickUserBoard(data,click[0],click[1])
+    return
 
 #### WEEK 1 ####
 
@@ -209,8 +213,15 @@ Parameters: dict mapping strs to values
 Returns: None
 '''
 def placeShip(data):
+    if shipIsValid(data["user_Board"],data["temp_Ship"])==True:
+        for each in data["temp_Ship"]:
+            data["user_Board"][each[0]][each[1]] = SHIP_UNCLICKED
+        data["user_Ship_Num"]+=1
+        print("ship can be place")
+    else:
+        print("Ship is not valid")
+    data["temp_Ship"]=[]
     return
-
 
 '''
 clickUserBoard(data, row, col)
@@ -218,8 +229,16 @@ Parameters: dict mapping strs to values ; int ; int
 Returns: None
 '''
 def clickUserBoard(data, row, col):
-    return
-
+    if data["user_Ship_Num"]==5:
+        print("Start playing the game")
+        return
+    if [row,col] in data["temp_Ship"]:
+        return
+    else:
+        data["temp_Ship"].append([row,col])
+    if len(data["temp_Ship"])==3:
+        placeShip(data)
+        
 
 ### WEEK 3 ###
 
@@ -323,6 +342,6 @@ def runSimulation(w, h):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    test.testShipIsValid()
+    #test.mousePressed()
     ## Finally, run the simulation to test it manually ##
-    #runSimulation(500, 500)
+    runSimulation(500, 500)
