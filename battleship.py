@@ -220,6 +220,7 @@ def placeShip(data):
     else:
         print("Ship is not valid")
     data["temp_Ship"]=[]
+    
     return
 
 '''
