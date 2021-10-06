@@ -35,6 +35,8 @@ def makeModel(data):
     data["comp_Ship_Num"]=5
     data["user_Board"]=emptyGrid(data["rows"],data["cols"])
     data["comp_Board"]=addShips(emptyGrid(data["rows"],data["cols"]),data["numShips"])
+    data["temp_Ship"]=[]
+    
     return data
 
 '''
@@ -45,6 +47,7 @@ Returns: None
 def makeView(data, userCanvas, compCanvas):
     drawGrid(data, userCanvas, data["user_Board"], True)
     drawGrid(data, compCanvas, data["comp_Board"], True)
+    drawShip(data, userCanvas,data["temp_Ship"])
     return
 
 
@@ -183,7 +186,10 @@ Parameters: dict mapping strs to values ; Tkinter canvas; 2D list of ints
 Returns: None
 '''
 def drawShip(data, canvas, ship):
+    for each in ship:
+        canvas.create_rectangle(each[1]*data["cell_Size"],each[0]*data["cell_Size"],each[1]*data["cell_Size"]+data["cell_Size"],each[0]*data["cell_Size"]+data["cell_Size"],fill="white") 
     return
+
 
 
 '''
@@ -192,8 +198,10 @@ Parameters: 2D list of ints ; 2D list of ints
 Returns: bool
 '''
 def shipIsValid(grid, ship):
-    return
-
+    if checkShip(grid,ship):
+        if isHorizontal(ship) or isVertical(ship):
+            return True
+    return False
 
 '''
 placeShip(data)
@@ -315,6 +323,6 @@ def runSimulation(w, h):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    test.testGetClickedCell()
+    test.testShipIsValid()
     ## Finally, run the simulation to test it manually ##
-    runSimulation(500, 500)
+    #runSimulation(500, 500)
