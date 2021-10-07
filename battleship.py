@@ -278,7 +278,7 @@ def runGameTurn(data, row, col):
         return
     else:
         updateBoard(data, data["comp_Board"],row,col, "user")
-    list1=getComputerGuess(data["user_Board"])
+    list1=getComputerGuess(data["user_Board"])     
     updateBoard(data,data["user_Board"],list1[0],list1[1],"comp")
 
 
