@@ -37,6 +37,7 @@ def makeModel(data):
     data["comp_Board"]=addShips(emptyGrid(data["rows"],data["cols"]),data["numShips"])
     data["temp_Ship"]=[]
     #data["user_Ships"]=0
+    data["winner_Track"]=None
     
     return data
 
@@ -51,6 +52,7 @@ def makeView(data, userCanvas, compCanvas):
     #drawGrid(data, compCanvas, data["comp_Board"], True)
     drawGrid(data, compCanvas, data["comp_Board"], False)
     drawShip(data, userCanvas,data["temp_Ship"])
+    drawGameOver(data,userCanvas)
     return
 
 
@@ -69,6 +71,8 @@ Parameters: dict mapping strs to values ; mouse event object ; 2D list of ints
 Returns: None
 '''
 def mousePressed(data, event, board):
+    if data["winner_Track"]!=None:
+        return
     click= getClickedCell(data,event)
     if board=="user":
         clickUserBoard(data,click[0],click[1])
@@ -264,7 +268,10 @@ def updateBoard(data, board, row, col, player):
         board[row][col]=SHIP_CLICKED  
     if board[row][col]== EMPTY_UNCLICKED:
         board[row][col]=EMPTY_CLICKED 
+    if isGameOver(board)==True:
+        data["winner_Track"]=player
     return
+    
 
 
 '''
@@ -288,22 +295,25 @@ Parameters: 2D list of ints
 Returns: list of ints
 '''
 def getComputerGuess(board):
-
-        while True:
-            row=random.randint(0,9)  
-            col=random.randint(0,9)
-            if board[row][col]==EMPTY_UNCLICKED or board[row][col]==SHIP_UNCLICKED: 
-                #print([row,col])
-                return [row,col]
-        #return [row][col]
+    while True:
+        row=random.randint(0,9)  
+        col=random.randint(0,9)
+        if board[row][col]==EMPTY_UNCLICKED or board[row][col]==SHIP_UNCLICKED:
+            #print([row,col])
+            return [row,col]
+    #return [row][col]
 '''
 isGameOver(board)
 Parameters: 2D list of ints
 Returns: bool
 '''
 def isGameOver(board):
-    return
-
+    for row in board:
+        for col in row:
+            if col==SHIP_UNCLICKED:
+                print("game done")
+                return False        
+    return True
 
 '''
 drawGameOver(data, canvas)
@@ -311,6 +321,10 @@ Parameters: dict mapping strs to values ; Tkinter canvas
 Returns: None
 '''
 def drawGameOver(data, canvas):
+    if data["winner_Track"]=="user":
+        canvas.create_text(250, 250, text="Congratulations", font="Arial 35 bold")
+    if data["winner_Track"]=="comp":
+        canvas.create_text(250, 250, text="User lost the game", font="Arial 35 bold")
     return
 
 
@@ -369,6 +383,6 @@ def runSimulation(w, h):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    test.testGetComputerGuess()
+    test.testIsGameOver()
     ## Finally, run the simulation to test it manually ##
     runSimulation(500, 500)
