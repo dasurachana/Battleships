@@ -72,8 +72,9 @@ def mousePressed(data, event, board):
     click= getClickedCell(data,event)
     if board=="user":
         clickUserBoard(data,click[0],click[1])
-    elif board=="comp":
-        runGameTurn(data, click[0], click[1])
+    elif board=="comp" and  data["user_Ship_Num"]==5:
+        click1= getClickedCell(data,event)
+        runGameTurn(data, click1[0], click1[1])
     return
 
 #### WEEK 1 ####
@@ -273,11 +274,13 @@ Parameters: dict mapping strs to values ; int ; int
 Returns: None
 '''
 def runGameTurn(data, row, col):
-    if data["comp_Board"]==SHIP_CLICKED or data["comp_Board"]==EMPTY_CLICKED:
+    if data["comp_Board"][row][col]==SHIP_CLICKED or data["comp_Board"][row][col]==EMPTY_CLICKED:
         #print("clicked")
         return
     else:
         updateBoard(data, data["comp_Board"],row,col, "user")
+    list1=getComputerGuess(data["user_Board"])     
+    updateBoard(data,data["user_Board"],list1[0],list1[1],"comp")
 
 
 '''
@@ -286,9 +289,14 @@ Parameters: 2D list of ints
 Returns: list of ints
 '''
 def getComputerGuess(board):
-    return
 
-
+        while True:
+            row=random.randint(0,9)  
+            col=random.randint(0,9)
+            if board[row][col]==EMPTY_UNCLICKED or board[row][col]==SHIP_UNCLICKED: 
+                #print([row,col])
+                return [row,col]
+        #return [row][col]
 '''
 isGameOver(board)
 Parameters: 2D list of ints
@@ -362,6 +370,6 @@ def runSimulation(w, h):
 
 # This code runs the test cases to check your work
 if __name__ == "__main__":
-    #test.testUpdateBoard()
+    test.testGetComputerGuess()
     ## Finally, run the simulation to test it manually ##
     runSimulation(500, 500)
